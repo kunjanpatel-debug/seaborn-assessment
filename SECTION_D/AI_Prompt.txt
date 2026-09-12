@@ -1,0 +1,37 @@
+SECTION D: AI PROMPT LOG 
+
+PROMPT 1: CODE GENERATION & BUG DIAGNOSTICS (PYTHON 3.13 COMPATIBILITY)
+
+User Query:
+
+"I encountered `ValueError: underlying array is read-only` when running `np.fill_diagonal(corr_abs.values, 0)` on a Pandas correlation matrix in Python 3.13. Explain why this happened and provide the memory-safe fix."
+
+AI Diagnostic Response:
+
+"In Python 3.13 and recent Pandas releases, `.values` on derived DataFrames returns a protected read-only memory view rather than a mutable NumPy array. Direct in-place mutation functions like `np.fill_diagonal()` fail security checks.
+
+Fix: Use `.to_numpy(copy=True)` to create an explicit, writable copy before executing `np.fill_diagonal()`, then reconstruct the DataFrame indexing to locate maximum off-diagonal correlations safely."
+
+PROMPT 2: VECTORISATION & SIMD PERFORMANCE OPTIMIZATION
+
+User Query:
+
+"Refactor a delivery fee calculator calculating Rs 20 base + Rs 5/km over 50,000 orders. Contrast Python native list comprehensions with NumPy SIMD vectorisation and specify runtime complexity."
+
+AI Diagnostic Response:
+
+"Native Python loops incur pointer traversal, dynamic type verification, and heap reallocations per iteration. NumPy vectorisation delegates calculations directly to contiguous C/Fortran blocks.
+
+Fix: Construct 1D NumPy float arrays using `np.random.uniform(1.0, 15.0, 25)` and evaluate `fees = 20 + 5 * distances` directly with hardware-level broadcasting, eliminating loop overhead."
+
+PROMPT 3: NON-BLOCKING VISUALIZATION PIPELINE (>= 150 DPI)
+
+User Query:
+
+"Ensure Matplotlib and Seaborn save high-resolution (>= 150 DPI) dashboards without halting terminal script execution through blocking GUI windows."
+
+AI Diagnostic Response:
+
+"Interactive GUI backends invoke blocking event loops on `plt.show()`. In headless environments or automation pipelines, this halts batch processing.
+
+Fix: Apply `plt.tight_layout()`, followed by `plt.savefig(filename, dpi=150)` and explicit `plt.close()` calls, avoiding blocking interactive loops while ensuring high-resolution outputs."
